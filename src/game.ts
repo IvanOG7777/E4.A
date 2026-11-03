@@ -315,20 +315,7 @@ export class GameScene extends Phaser.Scene implements Arena {
 
   summon(_kind: string, x: number, y: number): void {
     this.enemies.push(
-      new ShmupPrefabSprite(
-        this,
-        x,
-        y,
-        "drone",
-        2,
-        100,
-        13,
-        0.015,
-        true,
-        false,
-        x,
-        x < WIDTH / 2 ? 1 : -1,
-      ),
+      new ShmupPrefabSprite(this, x, y, "drone", x < WIDTH / 2 ? 1 : -1),
     );
   }
 
@@ -434,28 +421,8 @@ export class GameScene extends Phaser.Scene implements Arena {
         y = 70 + Math.floor(i / 2) * 50;
       }
       if (t !== spawnAt) continue;
-      const stats = {
-        drone: { health: 2, score: 100, size: 13, chance: 0.015, armed: true },
-        dart: { health: 1, score: 150, size: 12, chance: 0.015, armed: false },
-        turret: { health: 12, score: 400, size: 19, chance: 0.3, armed: true },
-        lancer: { health: 4, score: 250, size: 15, chance: 0.06, armed: true },
-      }[wave.kind];
-      const enemy = new ShmupPrefabSprite(
-        this,
-        x,
-        y,
-        wave.kind,
-        stats.health,
-        stats.score,
-        stats.size,
-        stats.chance,
-        stats.armed,
-        false,
-        x,
-        i % 2 === 0 ? 1 : -1,
-      );
-      // Every dart gets its own drop chance (also fixes the old enemy2/enemy3 slip).
-      if (wave.kind === "dart") enemy.dropChance = 0.015;
+      const side = i % 2 === 0 ? 1 : -1;
+      const enemy = new ShmupPrefabSprite(this, x, y, wave.kind, side);
       this.enemies.push(enemy);
     }
   }
